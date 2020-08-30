@@ -2,10 +2,8 @@
 """
 Spyder Editor
 
-This is a temporary script file.
 """
-# MATLAB command to write the txt files
-#creditData_excess_ret = fts2ascii('creditData_excess_ret.csv', creditData.excessRet);
+
 %matplotlib qt
 import sys
 import pandas as pd
@@ -13,17 +11,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
 import seaborn as sns
-from zscore import zscore
+import os
 from scipy.stats.stats import pearsonr
 
-sys.path.append(r"\\client\U$\Systematic\mcode\matFiles")
-sys.path.append(r"\\client\U$\AssetAllocation\Pranav\CPD\data_science_blogpost")
+#sys.path.append(r"\\client\U$\AssetAllocation\Pranav\CPD\data_science_blogpost")
+os.chdir(r"\\client\U$\AssetAllocation\Pranav\CPD\data_science_blogpost")
+from zscore import zscore
 
 endDt = pd.to_datetime('20200612', format='%Y%m%d')
 stDt = pd.to_datetime('20000101', format='%Y%m%d')
 
 # Read in Data
-df_excess_ret = pd.read_csv(r'\\client\U$\Systematic\mcode\matFiles\creditData_excess_ret.txt', sep = ' ')
+df_excess_ret = pd.read_csv(r'creditData_excess_ret.txt', sep = ' ')
 df_excess_ret.columns = df_excess_ret.columns.str.replace('\t' , '')
 df_excess_ret['dates'] = pd.to_datetime(df_excess_ret['dates'])
 df_excess_ret = df_excess_ret.loc[(df_excess_ret['dates'] > stDt) & (df_excess_ret['dates']<= endDt)]
@@ -31,7 +30,7 @@ df_excess_ret.set_index('dates', inplace=True)
 df_excess_ret = df_excess_ret.astype('float64')
 df_excess_ret.info()
 
-df_full_OAS = pd.read_csv(r'\\client\U$\Systematic\mcode\matFiles\creditData_full_OAS.txt', sep = ' ', skiprows=range(1))
+df_full_OAS = pd.read_csv(r'creditData_full_OAS.txt', sep = ' ', skiprows=range(1))
 df_full_OAS.columns = df_full_OAS.columns.str.replace("\t","")
 df_full_OAS['dates'] = pd.to_datetime(df_full_OAS['dates'])
 df_full_OAS = df_full_OAS.loc[(df_full_OAS['dates'] > stDt) & (df_full_OAS['dates']<= endDt)]
@@ -39,7 +38,7 @@ df_full_OAS.set_index('dates', inplace=True)
 df_full_OAS = df_full_OAS.astype('float64')
 df_full_OAS.info()
 
-df_OAS = pd.read_csv(r'\\client\U$\Systematic\mcode\matFiles\creditData_OAS.txt', sep = '\s+', skiprows=range(1))
+df_OAS = pd.read_csv(r'creditData_OAS.txt', sep = '\s+', skiprows=range(1))
 df_OAS.columns = df_OAS.columns.str.replace("\t","")
 df_OAS['dates'] = pd.to_datetime(df_OAS['dates'])
 df_OAS = df_OAS.loc[(df_OAS['dates'] > stDt) & (df_OAS['dates']<= endDt)]
@@ -47,7 +46,7 @@ df_OAS.set_index('dates', inplace=True)
 df_OAS = df_OAS.astype('float64')
 df_OAS.info()
 
-df_full_MV = pd.read_csv(r'\\client\U$\Systematic\mcode\matFiles\creditData_full_MV.txt', sep = ' ', skiprows=range(1))
+df_full_MV = pd.read_csv(r'creditData_full_MV.txt', sep = ' ', skiprows=range(1))
 df_full_MV.columns = df_full_MV.columns.str.replace("\t","")
 df_full_MV['dates'] = pd.to_datetime(df_full_MV['dates'])
 df_full_MV = df_full_MV.loc[(df_full_MV['dates'] > stDt) & (df_full_MV['dates']<= endDt)]
@@ -143,10 +142,6 @@ asset_class_index = df_excess_ret_index[asset_class]
 OAS = OASCompAdjOAS[asset_class]
 score = zscore(OAS,1,1)
 
-#plt.plot(score)
-#plt.plot(OASCompAdjOAS[asset_class]*0.02)
-#plt.legend('Score','OAS')
-
 period = range(1,79)
 cum_ret = np.zeros([len(asset_class_index),len(period)])
 
@@ -193,8 +188,6 @@ for i in range(len(stDt)):
     plt.ylabel('Correlation')
 plt.legend()
 plt.show()    
-    
-################### work from here onwards
 
 # Graphs
 # OAS
@@ -262,6 +255,7 @@ plt.ylabel('Period Excess Returns (%)')
 plt.xlabel('Starting OAS (bps)')
 plt.show()
 
+################### work from here onwards
 
 
 
