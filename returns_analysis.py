@@ -1,11 +1,42 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Sep  6 00:34:39 2020
-
-@author: Pranav
-"""
 
 def returns_analysis(OASCompAdjOAS, df_excess_ret_index, asset_class):
+
+    """
+    @author: Pranav
+    
+    Summary: 
+        The function does the correlation analysis on the input series and plots 
+        the relevant graphs
+    
+    Inputs: 
+        OASCompAdjOAS - This is the unnormlised independent variable being tested
+    
+        df_excess_ret_index - this is the return for each asset
+    
+        asset_class - this is a string that contains the name of the asset class 
+    
+        that the analysis shall be performed on
+    
+    Outputs:
+        OAS - the value of OASCompAdjOAS, extracted for the particular asset class
+    
+        score - the normalised value of OASCompAdjOAS, extracted for the particular 
+        asset class
+    
+        cum_ret - This contains the cumulative return of the excess return over the
+        specified window lengths (1-78 weeks)
+    
+        corr_full - Contains the correlation between the score and the cumulative
+        return over each period. This calculates the correlations for each series
+        over the entire dataset
+    
+        corr - Contains the correlation between the score and the cumulative
+        return over each period. This differs from corr_full as it calculates the 
+        correlations for each series for specific periods of time, rather than over
+        the whole timeframe
+        
+    """
     
     import sys
     import pandas as pd
@@ -20,6 +51,8 @@ def returns_analysis(OASCompAdjOAS, df_excess_ret_index, asset_class):
     asset_class_index = df_excess_ret_index[asset_class]
     OAS = OASCompAdjOAS[asset_class]
     score = zscore(OAS,1,1)
+    
+    # Calculate cumulative returns
     
     period = range(1,79)
     cum_ret = np.zeros([len(asset_class_index),len(period)])
@@ -59,6 +92,8 @@ def returns_analysis(OASCompAdjOAS, df_excess_ret_index, asset_class):
     plt.xlabel('Starting OAS (bps)')
     plt.show()
     
+    #Calculate correlations over the entire period
+    
     corr_full = np.zeros(cum_ret.shape[1])
     
     for lag in range(cum_ret.shape[1]):
@@ -70,6 +105,9 @@ def returns_analysis(OASCompAdjOAS, df_excess_ret_index, asset_class):
     plt.xlabel('Period Length (weeks)')
     plt.ylabel('Correlation')
     plt.show()    
+    
+    # Break down the full time frame into discrete chunks and calculate the 
+    # correlations over those periods
     
     stDt = ['1999-01-01','2002-01-01','2004-01-01','2006-01-01','2008-01-01'\
         ,'2010-01-01','2012-01-01','2014-01-01','2016-01-01','2018-01-01']
