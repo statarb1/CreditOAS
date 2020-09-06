@@ -3,6 +3,7 @@ The analysis in this paper discussed the evolving nature of credit spreads and a
 
 # Getting Started
 The OAS_script.py file has all the code required to run the analysis and produce all the graphs 
+The OAS_script.ipynb file has the corresponding jupyter notebook
 
 # Prerequisites
 Python 3 required. The scripts have been written using Spyder 
